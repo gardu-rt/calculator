@@ -14,9 +14,15 @@ function divide(num1, num2) {
   return num1 / num2;
 }
 
-let number1;
-let number2;
-let operator;
+let number1 = "";
+let number2 = "";
+let operator = "";
+
+function reset() {
+  number1 = "";
+  number2 = "";
+  operator = "";
+}
 
 function operate(opr, num1, num2) {
   num1 = parseFloat(num1);
@@ -65,9 +71,10 @@ function displayOperator(event) {
   }
 }
 
-function clearDisplay(event) {
+function clear(event) {
   if (event.target.classList.contains("clear")) {
     display.value = "0";
+    reset();
   }
 }
 
@@ -92,6 +99,6 @@ function displayComma(event) {
 
 container.addEventListener("click", displayNumber);
 container.addEventListener("click", displayOperator);
-container.addEventListener("click", clearDisplay);
+container.addEventListener("click", clear);
 container.addEventListener("click", backSpace);
 container.addEventListener("click", displayComma);
