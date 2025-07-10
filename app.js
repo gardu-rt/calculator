@@ -1,3 +1,15 @@
+let number1 = "";
+let number2 = "";
+let operator = "";
+let endIsOperator = false;
+let canUseComma = true;
+
+const container = document.querySelector(".container");
+const display = document.querySelector("#display");
+const tempResult = document.querySelector(".temp-result");
+
+display.textContent = "0";
+
 function add(num1, num2) {
   return num1 + num2;
 }
@@ -14,14 +26,12 @@ function divide(num1, num2) {
   return num1 / num2;
 }
 
-let number1 = "";
-let number2 = "";
-let operator = "";
-
 function reset() {
   number1 = "";
   number2 = "";
   operator = "";
+  endIsOperator = false;
+  canUseComma = true;
 }
 
 function operate(opr, num1, num2) {
@@ -39,20 +49,12 @@ function operate(opr, num1, num2) {
   }
 }
 
-const container = document.querySelector(".container");
-const display = document.querySelector("#display");
-
-display.value = "0";
-
-let endIsOperator = false;
-let canUseComma = true;
-
 function displayNumber(event) {
   if (event.target.classList.contains("number")) {
-    if (display.value === "0") {
-      display.value = event.target.textContent;
+    if (display.textContent === "0") {
+      display.textContent = event.target.textContent;
     } else {
-      display.value += event.target.textContent;
+      display.textContent += event.target.textContent;
     }
     endIsOperator = false;
   }
@@ -61,10 +63,10 @@ function displayNumber(event) {
 function displayOperator(event) {
   if (event.target.classList.contains("operator")) {
     if (endIsOperator) {
-      display.value = display.value.slice(0, -1);
-      display.value += event.target.textContent;
+      display.textContent = display.textContent.slice(0, -1);
+      display.textContent += event.target.textContent;
     } else {
-      display.value += event.target.textContent;
+      display.textContent += event.target.textContent;
     }
     endIsOperator = true;
     canUseComma = true;
@@ -73,17 +75,17 @@ function displayOperator(event) {
 
 function clear(event) {
   if (event.target.classList.contains("clear")) {
-    display.value = "0";
+    display.textContent = "0";
     reset();
   }
 }
 
 function backSpace(event) {
   if (event.target.classList.contains("del")) {
-    if (display.value.length > 1) {
-      display.value = display.value.slice(0, -1);
+    if (display.textContent.length > 1) {
+      display.textContent = display.textContent.slice(0, -1);
     } else {
-      display.value = "0";
+      display.textContent = "0";
     }
   }
 }
@@ -91,7 +93,7 @@ function backSpace(event) {
 function displayComma(event) {
   if (event.target.classList.contains("comma")) {
     if (canUseComma && !endIsOperator) {
-      display.value += event.target.textContent;
+      display.textContent += event.target.textContent;
       canUseComma = false;
     }
   }

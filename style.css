@@ -21,7 +21,21 @@ body {
 #display {
     box-sizing: border-box;
     width: 300px;
-    margin-bottom: 5px;
+    height: 28px;
+    margin-bottom: 0;
     font-size: 24px;
     text-align: end;
+    border: 1px solid black;
+    border-bottom: none;
+    padding: 2px;
+}
+
+.temp-result {
+    box-sizing: border-box;
+    width: 300px;
+    margin: 0;
+    text-align: end;
+    border: 1px solid black;
+    border-top: none;
+    margin-bottom: 5px;
 }
