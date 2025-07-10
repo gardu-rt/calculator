@@ -25,7 +25,7 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-  return num1 / num2;
+  return num2 === 0 ? "Error" : num1 / num2;
 }
 
 function reset() {
@@ -53,71 +53,77 @@ function operate(opr, num1, num2) {
   }
 }
 
-function displayNumber(event) {
-  if (event.target.classList.contains("number")) {
-    if (display.textContent.length === 21) return;
-    if (finalResult) {
-      display.textContent = "0";
-      finalResult = "";
-    }
-    if (display.textContent === "0") {
-      display.textContent = event.target.textContent;
-    } else {
-      display.textContent += event.target.textContent;
-    }
-    endIsOperator = false;
-    getNumber();
-    if (operator, number1, number2) {
-      tempResult.textContent = Math.round(operate(operator, number1, number2) * 1000000000) / 1000000000;
-    }
-  }
+function updateDisplay(value) {
+  display.textContent = value.toString().slice(0, 21);
 };
 
-function displayOperator(event) {
-  if (event.target.classList.contains("operator")) {
-    if (display.textContent.length === 21) return;
-    if (finalResult) {
-      number1 = finalResult;
-      finalResult = "";
-    }
-    if (endIsOperator) {
-      display.textContent = display.textContent.slice(0, -1);
-      display.textContent += event.target.textContent;
-    } else {
-      display.textContent += event.target.textContent;
-    }
-    endIsOperator = true;
-    canUseComma = true;
-
-    getOperator(event);
-    history = display.textContent;
+function updateTempResult() {
+  if (operator && number1 && number2) {
+    const result = operate(operator, number1, number2);
+    tempResult.textContent =
+      typeof result === "number"
+        ? Math.round(result * 1e9) / 1e9
+        : result;
+  } else {
+    tempResult.textContent = "";
   }
 }
 
-function clear(event) {
-  if (event.target.classList.contains("clear")) {
+function handleNumber(value) {
+  if (finalResult) {
     display.textContent = "0";
-    reset();
+    finalResult = "";
+  }
+
+  if (display.textContent === "0") {
+    updateDisplay(value);
+  } else {
+    updateDisplay(display.textContent + value);
+  }
+
+  endIsOperator = false;
+  getNumber();
+
+  updateTempResult();
+};
+
+function handleOperator(value) {
+  if (finalResult) {
+    number1 = finalResult;
+    finalResult = "";
+  }
+  if (endIsOperator) {
+    display.textContent = display.textContent.slice(0, -1);
+    updateDisplay(display.textContent + value);
+  } else {
+    updateDisplay(display.textContent + value);
+  }
+  endIsOperator = true;
+  canUseComma = true;
+
+  getOperator(value);
+  history = display.textContent;
+}
+
+function clear() {
+  display.textContent = "0";
+  reset();
+}
+
+function backSpace() {
+  if (display.textContent.length > 1) {
+    display.textContent = display.textContent.slice(0, -1);
+    getNumber();
+  } else {
+    display.textContent = "0";
   }
 }
 
-function backSpace(event) {
-  if (event.target.classList.contains("del")) {
-    if (display.textContent.length > 1) {
-      display.textContent = display.textContent.slice(0, -1);
-    } else {
-      display.textContent = "0";
-    }
-  }
-}
-
-function displayComma(event) {
-  if (event.target.classList.contains("comma")) {
-    if (display.textContent.length === 21) return;
-    if (canUseComma && !endIsOperator) {
-      display.textContent += event.target.textContent;
-      canUseComma = false;
-    }
+function handleComma(value) {
+  if (display.textContent.length === 21) return;
+  if (canUseComma && !endIsOperator) {
+    updateDisplay(display.textContent + value);
+    canUseComma = false;
   }
 }
 
@@ -129,7 +135,7 @@ function getNumber() {
   }
 }
 
-function getOperator(event) {
+function getOperator(value) {
   if (!number1) {
     number1 = "0";
   }
@@ -137,22 +143,43 @@ function getOperator(event) {
     number1 = tempResult.textContent;
     number2 = "";
   }
-  operator = event.target.textContent;
+  operator = value;
 }
 
-function summarize(event) {
-  if (event.target.classList.contains("return")) {
-    if (operator, number1, number2) {
-      finalResult = Math.round(operate(operator, number1, number2) * 1000000000) / 1000000000;
-      display.textContent = finalResult;
-      reset();
-    }
+function handleEqual() {
+  if (operator && number1 && number2) {
+    const result = Math.round(operate(operator, number1, number2) * 1e9) / 1e9;
+    finalResult = result === "Error" ? "Error" : result;
+    !finalResult ? clear() : updateDisplay(finalResult);
+    reset();
   }
 }
 
-container.addEventListener("click", displayNumber);
-container.addEventListener("click", displayOperator);
-container.addEventListener("click", clear);
-container.addEventListener("click", backSpace);
-container.addEventListener("click", displayComma);
-container.addEventListener("click", summarize);
+container.addEventListener("click", (event) => {
+  const target = event.target;
+  if (!target.matches("button")) return;
+
+  if (target.classList.contains("number")) {
+    handleNumber(target.textContent);
+  }
+
+  if (target.classList.contains("operator")) {
+    handleOperator(target.textContent);
+  }
+
+  if (target.classList.contains("clear")) {
+    clear();
+  }
+
+  if (target.classList.contains("del")) {
+    backSpace();
+  }
+
+  if (target.classList.contains("comma")) {
+    handleComma(target.textContent);
+  }
+
+  if (target.classList.contains("return")) {
+    handleEqual();
+  }
+});
