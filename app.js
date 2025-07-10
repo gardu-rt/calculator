@@ -19,15 +19,17 @@ let number2;
 let operator;
 
 function operate(opr, num1, num2) {
+  num1 = parseFloat(num1);
+  num2 = parseFloat(num2);
   switch (opr) {
     case "÷":
-      divide(num1, num2);
+      return divide(num1, num2);
     case "*":
-      multiply(num1, num2);
+      return multiply(num1, num2);
     case "-":
-      subtract(num1, num2);
+      return subtract(num1, num2);
     case "+":
-      add(num1, num2);
+      return add(num1, num2);
   }
 }
 
