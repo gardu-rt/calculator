@@ -71,7 +71,7 @@ function clearDisplay(event) {
 
 function backSpace(event) {
   if (event.target.classList.contains("del")) {
-    if (display.value > 1) {
+    if (display.value.length > 1) {
       display.value = display.value.slice(0, -1);
     } else {
       display.value = "0";
