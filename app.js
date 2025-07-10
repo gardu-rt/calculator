@@ -17,17 +17,18 @@ function divide(num1, num2) {
 let number1;
 let number2;
 let operator;
+let result;
 
 function operate(opr, num1, num2) {
   switch (opr) {
     case "÷":
-      divide(num1, num2);
+      return divide(num1, num2);
     case "*":
-      multiply(num1, num2);
+      return multiply(num1, num2);
     case "-":
-      subtract(num1, num2);
+      return subtract(num1, num2);
     case "+":
-      add(num1, num2);
+      return add(num1, num2);
   }
 }
 
@@ -41,9 +42,15 @@ let canUseComma = true;
 
 function displayNumber(event) {
   if (event.target.classList.contains("number")) {
+    if (result) {
+      display.value = "0";
+    }
     if (display.value === "0") {
       display.value = event.target.textContent;
     } else {
+      if (number1 && !operator) {
+        operator = display.value.slice(-1);
+      }
       display.value += event.target.textContent;
     }
     endIsOperator = false;
@@ -57,6 +64,9 @@ function displayOperator(event) {
       display.value += event.target.textContent;
     } else {
       display.value += event.target.textContent;
+      if (!number1) {
+        number1 = display.value.slice(0, -1);
+      }
     }
     endIsOperator = true;
     canUseComma = true;
@@ -88,8 +98,21 @@ function displayComma(event) {
   }
 }
 
+function displayResult(event) {
+  if (event.target.classList.contains("return")) {
+    if (number1) {
+      number2 = display.value.slice(number1.length + 1,);
+    }
+    number1 = parseFloat(number1);
+    number2 = parseFloat(number2);
+    result = operate(operator, number1, number2);
+    display.value = result;
+  }
+}
+
 container.addEventListener("click", displayNumber);
 container.addEventListener("click", displayOperator);
 container.addEventListener("click", clearDisplay);
 container.addEventListener("click", backSpace);
 container.addEventListener("click", displayComma);
+container.addEventListener("click", displayResult);
