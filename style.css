@@ -1,0 +1,27 @@
+body {
+    font-family: Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.container {
+    margin: 0 auto;
+    margin-top: 16px;
+    box-sizing: border-box;
+    width: 300px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.btn {
+    box-sizing: border-box;
+    height: 64px;
+    flex: 1 1 64px;
+    font-size: 24px;
+}
+
+#display {
+    box-sizing: border-box;
+    width: 300px;
+    margin-bottom: 5px;
+    font-size: 24px;
+    text-align: end;
+}
