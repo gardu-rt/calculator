@@ -106,17 +106,19 @@ function handleOperator(value) {
 }
 
 function clear() {
-  display.textContent = "0";
+  updateDisplay("0");
   reset();
 }
 
 function backSpace() {
   if (display.textContent.length > 1) {
-    display.textContent = display.textContent.slice(0, -1);
-    getNumber();
+    updateDisplay(display.textContent.slice(0, -1));
   } else {
-    display.textContent = "0";
+    updateDisplay("0");
   }
+
+  getNumber();
+  updateTempResult();
 }
 
 function handleComma(value) {
