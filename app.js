@@ -2,6 +2,7 @@ let number1 = "";
 let number2 = "";
 let operator = "";
 let history = "";
+let finalResult = "";
 let endIsOperator = false;
 let canUseComma = true;
 
@@ -32,7 +33,6 @@ function reset() {
   number2 = "";
   operator = "";
   history = "";
-  display.textContent = "0";
   tempResult.textContent = "";
   endIsOperator = false;
   canUseComma = true;
@@ -55,6 +55,11 @@ function operate(opr, num1, num2) {
 
 function displayNumber(event) {
   if (event.target.classList.contains("number")) {
+    if (display.textContent.length === 21) return;
+    if (finalResult) {
+      display.textContent = "0";
+      finalResult = "";
+    }
     if (display.textContent === "0") {
       display.textContent = event.target.textContent;
     } else {
@@ -63,13 +68,18 @@ function displayNumber(event) {
     endIsOperator = false;
     getNumber();
     if (operator, number1, number2) {
-      tempResult.textContent = operate(operator, number1, number2);
+      tempResult.textContent = Math.round(operate(operator, number1, number2) * 1000000000) / 1000000000;
     }
   }
 };
 
 function displayOperator(event) {
   if (event.target.classList.contains("operator")) {
+    if (display.textContent.length === 21) return;
+    if (finalResult) {
+      number1 = finalResult;
+      finalResult = "";
+    }
     if (endIsOperator) {
       display.textContent = display.textContent.slice(0, -1);
       display.textContent += event.target.textContent;
@@ -86,6 +96,7 @@ function displayOperator(event) {
 
 function clear(event) {
   if (event.target.classList.contains("clear")) {
+    display.textContent = "0";
     reset();
   }
 }
@@ -102,6 +113,7 @@ function backSpace(event) {
 
 function displayComma(event) {
   if (event.target.classList.contains("comma")) {
+    if (display.textContent.length === 21) return;
     if (canUseComma && !endIsOperator) {
       display.textContent += event.target.textContent;
       canUseComma = false;
@@ -128,8 +140,19 @@ function getOperator(event) {
   operator = event.target.textContent;
 }
 
+function summarize(event) {
+  if (event.target.classList.contains("return")) {
+    if (operator, number1, number2) {
+      finalResult = Math.round(operate(operator, number1, number2) * 1000000000) / 1000000000;
+      display.textContent = finalResult;
+      reset();
+    }
+  }
+}
+
 container.addEventListener("click", displayNumber);
 container.addEventListener("click", displayOperator);
 container.addEventListener("click", clear);
 container.addEventListener("click", backSpace);
 container.addEventListener("click", displayComma);
+container.addEventListener("click", summarize);
