@@ -1,6 +1,7 @@
 let number1 = "";
 let number2 = "";
 let operator = "";
+let history = "";
 let endIsOperator = false;
 let canUseComma = true;
 
@@ -30,6 +31,9 @@ function reset() {
   number1 = "";
   number2 = "";
   operator = "";
+  history = "";
+  display.textContent = "0";
+  tempResult.textContent = "";
   endIsOperator = false;
   canUseComma = true;
 }
@@ -40,7 +44,7 @@ function operate(opr, num1, num2) {
   switch (opr) {
     case "÷":
       return divide(num1, num2);
-    case "*":
+    case "×":
       return multiply(num1, num2);
     case "-":
       return subtract(num1, num2);
@@ -57,6 +61,10 @@ function displayNumber(event) {
       display.textContent += event.target.textContent;
     }
     endIsOperator = false;
+    getNumber();
+    if (operator, number1, number2) {
+      tempResult.textContent = operate(operator, number1, number2);
+    }
   }
 };
 
@@ -70,12 +78,14 @@ function displayOperator(event) {
     }
     endIsOperator = true;
     canUseComma = true;
+
+    getOperator(event);
+    history = display.textContent;
   }
 }
 
 function clear(event) {
   if (event.target.classList.contains("clear")) {
-    display.textContent = "0";
     reset();
   }
 }
@@ -97,6 +107,25 @@ function displayComma(event) {
       canUseComma = false;
     }
   }
+}
+
+function getNumber() {
+  if (!tempResult.textContent && !operator) {
+    number1 = display.textContent;
+  } else {
+    number2 = display.textContent.slice(history.length,);
+  }
+}
+
+function getOperator(event) {
+  if (!number1) {
+    number1 = "0";
+  }
+  if (tempResult.textContent) {
+    number1 = tempResult.textContent;
+    number2 = "";
+  }
+  operator = event.target.textContent;
 }
 
 container.addEventListener("click", displayNumber);
