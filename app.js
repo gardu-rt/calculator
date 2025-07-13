@@ -17,6 +17,7 @@ display.textContent = "0";
 
 
 function evaluateExpression(arr) {
+  if (arr.length % 2 === 0) arr.splice(-1);
   let array = [...arr];
   for (let i = 0; i < array.length; i++) {
 
@@ -128,6 +129,7 @@ function backSpace() {
 
   getNumber();
   updateTempResult();
+  endIsOperator = endIsOperator ? false : true;
 }
 
 function handleComma(value) {
