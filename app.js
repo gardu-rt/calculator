@@ -3,6 +3,9 @@ let number2 = "";
 let operator = "";
 let history = "";
 let finalResult = "";
+let rawInput = "";
+let cleanInput = "";
+let tokens = "";
 let endIsOperator = false;
 let canUseComma = true;
 
@@ -14,33 +17,34 @@ display.textContent = "0";
 
 
 function evaluateExpression(arr) {
-  for (let i = 0; i < arr.length; i++) {
+  let array = [...arr];
+  for (let i = 0; i < array.length; i++) {
 
-    if (arr[i] === "×" || arr[i] === "÷") {
-      let left = parseFloat(arr[i - 1]);
-      let right = parseFloat(arr[i + 1]);
-      let result = arr[i] === "÷" ? left / right : left * right;
+    if (array[i] === "*" || array[i] === "/") {
+      let left = parseFloat(array[i - 1]);
+      let right = parseFloat(array[i + 1]);
+      let result = array[i] === "/" ? left / right : left * right;
 
-      arr.splice(i - 1, 3, result.toString());
-
-      i -= 1;
-    }
-  }
-
-  for (let i = 0; i < arr.length; i++) {
-
-    if (arr[i] === "+" || arr[i] === "-") {
-      let left = parseFloat(arr[i - 1]);
-      let right = parseFloat(arr[i + 1]);
-      let result = arr[i] === "+" ? left + right : left - right;
-
-      arr.splice(i - 1, 3, result.toString());
+      array.splice(i - 1, 3, result.toString());
 
       i -= 1;
     }
   }
 
-  return arr[0];
+  for (let i = 0; i < array.length; i++) {
+
+    if (array[i] === "+" || array[i] === "-") {
+      let left = parseFloat(array[i - 1]);
+      let right = parseFloat(array[i + 1]);
+      let result = array[i] === "+" ? left + right : left - right;
+
+      array.splice(i - 1, 3, result.toString());
+
+      i -= 1;
+    }
+  }
+
+  return array[0];
 }
 
 function reset() {
@@ -53,28 +57,18 @@ function reset() {
   canUseComma = true;
 }
 
-function operate(opr, num1, num2) {
-  num1 = parseFloat(num1);
-  num2 = parseFloat(num2);
-  switch (opr) {
-    case "÷":
-      return divide(num1, num2);
-    case "×":
-      return multiply(num1, num2);
-    case "-":
-      return subtract(num1, num2);
-    case "+":
-      return add(num1, num2);
-  }
-}
 
 function updateDisplay(value) {
   display.textContent = value.toString().slice(0, 21);
+  rawInput = display.textContent;
+  cleanInput = rawInput.replace(/×/g, "*").replace(/÷/g, "/");
+  tokens = cleanInput.match(/(\d+(\.\d+)?|[+\-*/])/g);
+
 };
 
 function updateTempResult() {
   if (operator && number1 && number2) {
-    const result = operate(operator, number1, number2);
+    const result = evaluateExpression(tokens);
     tempResult.textContent =
       typeof result === "number"
         ? Math.round(result * 1e9) / 1e9
@@ -165,7 +159,7 @@ function getOperator(value) {
 
 function handleEqual() {
   if (operator && number1 && number2) {
-    const result = Math.round(operate(operator, number1, number2) * 1e9) / 1e9;
+    const result = Math.round(evaluateExpression(tokens) * 1e9) / 1e9;
     finalResult = result === "Error" ? "Error" : result;
     !finalResult ? clear() : updateDisplay(finalResult);
     reset();
