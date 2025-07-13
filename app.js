@@ -1,7 +1,3 @@
-let number1 = "";
-let number2 = "";
-let operator = "";
-let history = "";
 let finalResult = "";
 let rawInput = "";
 let cleanInput = "";
@@ -49,10 +45,9 @@ function evaluateExpression(arr) {
 }
 
 function reset() {
-  number1 = "";
-  number2 = "";
-  operator = "";
-  history = "";
+  rawInput = "";
+  cleanInput = "";
+  tokens = "";
   tempResult.textContent = "";
   endIsOperator = false;
   canUseComma = true;
@@ -68,7 +63,7 @@ function updateDisplay(value) {
 };
 
 function updateTempResult() {
-  if (operator && number1 && number2) {
+  if (tokens.length >= 2) {
     const result = evaluateExpression(tokens);
     tempResult.textContent =
       typeof result === "number"
@@ -92,7 +87,6 @@ function handleNumber(value) {
   }
 
   endIsOperator = false;
-  getNumber();
 
   updateTempResult();
 };
@@ -111,7 +105,6 @@ function handleOperator(value) {
   endIsOperator = true;
   canUseComma = true;
 
-  getOperator(value);
   history = display.textContent;
 }
 
@@ -127,7 +120,6 @@ function backSpace() {
     updateDisplay("0");
   }
 
-  getNumber();
   updateTempResult();
   endIsOperator = endIsOperator ? false : true;
 }
@@ -140,27 +132,8 @@ function handleComma(value) {
   }
 }
 
-function getNumber() {
-  if (!tempResult.textContent && !operator) {
-    number1 = display.textContent;
-  } else {
-    number2 = display.textContent.slice(history.length,);
-  }
-}
-
-function getOperator(value) {
-  if (!number1) {
-    number1 = "0";
-  }
-  if (tempResult.textContent) {
-    number1 = tempResult.textContent;
-    number2 = "";
-  }
-  operator = value;
-}
-
 function handleEqual() {
-  if (operator && number1 && number2) {
+  if (tokens) {
     const result = Math.round(evaluateExpression(tokens) * 1e9) / 1e9;
     finalResult = result === "Error" ? "Error" : result;
     !finalResult ? clear() : updateDisplay(finalResult);
