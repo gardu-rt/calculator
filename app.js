@@ -12,20 +12,35 @@ const tempResult = document.querySelector(".temp-result");
 
 display.textContent = "0";
 
-function add(num1, num2) {
-  return num1 + num2;
-}
 
-function subtract(num1, num2) {
-  return num1 - num2;
-}
+function evaluateExpression(arr) {
+  for (let i = 0; i < arr.length; i++) {
 
-function multiply(num1, num2) {
-  return num1 * num2;
-}
+    if (arr[i] === "×" || arr[i] === "÷") {
+      let left = parseFloat(arr[i - 1]);
+      let right = parseFloat(arr[i + 1]);
+      let result = arr[i] === "÷" ? left / right : left * right;
 
-function divide(num1, num2) {
-  return num2 === 0 ? "Error" : num1 / num2;
+      arr.splice(i - 1, 3, result.toString());
+
+      i -= 1;
+    }
+  }
+
+  for (let i = 0; i < arr.length; i++) {
+
+    if (arr[i] === "+" || arr[i] === "-") {
+      let left = parseFloat(arr[i - 1]);
+      let right = parseFloat(arr[i + 1]);
+      let result = arr[i] === "+" ? left + right : left - right;
+
+      arr.splice(i - 1, 3, result.toString());
+
+      i -= 1;
+    }
+  }
+
+  return arr[0];
 }
 
 function reset() {
